@@ -1,0 +1,48 @@
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    public Transform cameraHolder;
+    public float speed = 5f;
+    public float jumpForce = 5f;
+    private Rigidbody rb;
+
+    private float _initialXPos;
+    private float _horizontalInput;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            _initialXPos = transform.position.x;
+        }
+        if (Input.GetMouseButton(0))
+        {
+            _horizontalInput += Input.GetAxis("Mouse X");
+            Vector3 pos = transform.position;
+            pos.x = _initialXPos + _horizontalInput;
+            transform.position = pos;
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            _horizontalInput = 0;
+        }
+
+        transform.position += Vector3.forward * Time.deltaTime * speed;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+
+        Vector3 cameraPos = transform.position;
+        cameraPos.x = 0;
+        cameraHolder.position = cameraPos;
+    }
+}
